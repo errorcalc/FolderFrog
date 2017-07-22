@@ -4,14 +4,14 @@ uses
   Windows,
   Dialogs,
   Vcl.Forms,
-  Main in 'Main.pas' {MainForm};
+  Main in 'Main.pas' {MainForm},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 
 const
   MName = 'errorsoft.FolderFrog/once';
-var
-  M: THandle;
 begin
   if OpenMutex(MUTEX_ALL_ACCESS, false, MName) <> 0 then
   begin
