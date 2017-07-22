@@ -13,6 +13,7 @@ object MainForm: TMainForm
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  StyleElements = [seFont, seClient]
   OnClose = FormClose
   OnCreate = FormCreate
   OnHide = FormHide
@@ -66,7 +67,7 @@ object MainForm: TMainForm
     Caption = #1047#1072#1087#1091#1089#1082' '#1087#1088#1080' '#1079#1072#1075#1088#1091#1079#1082#1077' Windows'
     TabOrder = 2
   end
-  object PanelMarketing: TPanel
+  object PanelHeader: TPanel
     Left = 8
     Top = 8
     Width = 433

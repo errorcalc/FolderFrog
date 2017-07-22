@@ -49,7 +49,7 @@ type
     OpenFolderDialog: TFileOpenDialog;
     MenuItemOpenCurrentFolder: TMenuItem;
     N5: TMenuItem;
-    PanelMarketing: TPanel;
+    PanelHeader: TPanel;
     Label1: TLabel;
     Label2: TLabel;
     Label3: TLabel;
@@ -61,7 +61,6 @@ type
     procedure ButtonOkClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Button3Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ButtonSelectPathClick(Sender: TObject);
     procedure TimerTestTimer(Sender: TObject);
@@ -119,11 +118,6 @@ end;
 procedure TMainForm.ButtonOkClick(Sender: TObject);
 begin
   Self.Close;
-end;
-
-procedure TMainForm.Button3Click(Sender: TObject);
-begin
-  halt;
 end;
 
 function TMainForm.CurrentPath: string;
