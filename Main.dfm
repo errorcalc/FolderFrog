@@ -87,14 +87,14 @@ object MainForm: TMainForm
       Margins.Bottom = 4
       Align = alBottom
       Alignment = taCenter
-      Caption = 'github.com/errorcalc/FolderFrog'
+      Caption = 'github.com/errorcalc/FolderFrog | errorsoft(c) 2017'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = []
       ParentFont = False
-      ExplicitWidth = 155
+      ExplicitWidth = 248
     end
     object Label2: TLabel
       AlignWithMargins = True
@@ -189,7 +189,7 @@ object MainForm: TMainForm
     Width = 433
     Height = 17
     Anchors = [akLeft, akTop, akRight]
-    Caption = #1055#1086#1083#1085#1091#1102' '#1076#1072#1090#1072
+    Caption = #1055#1086#1083#1085#1072#1103' '#1076#1072#1090#1072
     TabOrder = 5
   end
   object TrayIcon: TTrayIcon
