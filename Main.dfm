@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   BorderStyle = bsDialog
   Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1103
-  ClientHeight = 282
+  ClientHeight = 305
   ClientWidth = 449
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   DesignSize = (
     449
-    282)
+    305)
   PixelsPerInch = 96
   TextHeight = 13
   object LabelPath: TLabel
@@ -50,7 +50,7 @@ object MainForm: TMainForm
   end
   object ButtonOk: TButton
     Left = 366
-    Top = 249
+    Top = 272
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -182,6 +182,15 @@ object MainForm: TMainForm
       WordWrap = True
       ExplicitWidth = 407
     end
+  end
+  object CheckBoxFullData: TCheckBox
+    Left = 8
+    Top = 249
+    Width = 433
+    Height = 17
+    Anchors = [akLeft, akTop, akRight]
+    Caption = #1055#1086#1083#1085#1091#1102' '#1076#1072#1090#1072
+    TabOrder = 5
   end
   object TrayIcon: TTrayIcon
     Icon.Data = {

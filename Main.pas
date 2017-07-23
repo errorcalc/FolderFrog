@@ -31,6 +31,7 @@ type
   public
     Path: string;
     AutoRun: Boolean;
+    FullData: Boolean;
   end;
 
   TMainForm = class(TForm)
@@ -56,6 +57,7 @@ type
     EsImage1: TEsImage;
     Bevel1: TBevel;
     Label4: TLabel;
+    CheckBoxFullData: TCheckBox;
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemConfigClick(Sender: TObject);
     procedure ButtonOkClick(Sender: TObject);
@@ -77,7 +79,7 @@ type
     procedure SaveSettings;
     procedure SetAutoRun(Enable: Boolean);
     procedure ShowTrayMessage(Msg: string);
-    function CurrentPath: string;
+    function CurrentPath(FullData: Boolean): string;
   public
     { Public declarations }
   end;
@@ -120,13 +122,18 @@ begin
   Self.Close;
 end;
 
-function TMainForm.CurrentPath: string;
+function TMainForm.CurrentPath(FullData: Boolean): string;
 var
   Year, Month, Day: WORD;
 begin
   DecodeDate(Now, Year, Month, Day);
   Result := IncludeTrailingPathDelimiter(Settings.Path) + Year.ToString + PathDelim +
-    Months[Month] + PathDelim + Day.ToString;
+    Months[Month] + PathDelim;// + Day.ToString;
+
+  if FullData then
+    Result := Result + Day.ToString + '.' + Month.ToString + '.' + (Year mod 100).ToString
+  else
+    Result := Result +  Day.ToString;
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -144,6 +151,7 @@ begin
   // settings
   Settings.Path := EditPath.Text;
   Settings.AutoRun := CheckBoxAutoRun.Checked;
+  Settings.FullData := CheckBoxFullData.Checked;
   SaveSettings;
 
   // autorun
@@ -190,6 +198,7 @@ begin
 
   TimerTest.Enabled := True;
   Settings.AutoRun := True;
+  Settings.FullData := True;
 end;
 
 procedure TMainForm.FormHide(Sender: TObject);
@@ -210,6 +219,7 @@ begin
   LoadSettings;
   EditPath.Text := Settings.Path;
   CheckBoxAutoRun.Checked := Settings.AutoRun;
+  CheckBoxFullData.Checked := Settings.FullData;
 end;
 
 procedure TMainForm.Generate;
@@ -222,7 +232,7 @@ begin
   try
     //if DirectoryExists(Settings.Path) then
     //begin
-      Folder := CurrentPath;
+      Folder := CurrentPath(Settings.FullData);
 
       if not DirectoryExists(Folder) then
       begin
@@ -254,6 +264,8 @@ begin
       Settings.Path := R.ReadString('Path');
     if R.ValueExists('AutoRun') then
       Settings.AutoRun := R.ReadBool('AutoRun');
+    if R.ValueExists('FullData') then
+      Settings.FullData := R.ReadBool('FullData');
   finally
     R.Free;
   end;
@@ -271,7 +283,7 @@ begin
   IsBadPath := False;
   Generate;
   if not IsBadPath then
-    ShellExecute(Application.Handle, 'explore', PChar(CurrentPath), nil, nil, SW_SHOWNORMAL);
+    ShellExecute(Application.Handle, 'explore', PChar(CurrentPath(Settings.FullData)), nil, nil, SW_SHOWNORMAL);
 end;
 
 procedure TMainForm.MenuItemForceCreateClick(Sender: TObject);
@@ -296,6 +308,7 @@ begin
     R.OpenKey(TSettings.RegistryPath, True);
     R.WriteString('Path', Settings.Path);
     R.WriteBool('AutoRun', Settings.AutoRun);
+    R.WriteBool('FullData', Settings.FullData);
     R.WriteInteger('Generation', 1);
   finally
     R.Free;
