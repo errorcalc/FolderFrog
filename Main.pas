@@ -19,7 +19,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   System.Win.TaskbarCore, Vcl.Taskbar, Vcl.Menus, System.Win.Registry, FileCtrl, IoUtils, ShellAPI,
-  Vcl.Imaging.pngimage, ES.BaseControls, ES.Images;
+  Vcl.Imaging.pngimage, ES.BaseControls, ES.Images, Cooperation;
 
 const
   AppName = 'FolderFrog';
@@ -79,8 +79,9 @@ type
     procedure SetAutoRun(Enable: Boolean);
     procedure ShowTrayMessage(Msg: string);
     function CurrentPath(FullData: Boolean): string;
+    procedure OpenCurrentFolder;
   public
-    { Public declarations }
+    procedure DefaultHandler(var Message); override;
   end;
 
 var
@@ -272,6 +273,11 @@ end;
 
 procedure TMainForm.MenuItemOpenCurrentFolderClick(Sender: TObject);
 begin
+ OpenCurrentFolder;
+end;
+
+procedure TMainForm.OpenCurrentFolder;
+begin
   IsBadPath := False;
   Generate;
   if not IsBadPath then
@@ -334,6 +340,16 @@ end;
 procedure TMainForm.TimerTestTimer(Sender: TObject);
 begin
   Generate;
+end;
+
+procedure TMainForm.DefaultHandler(var Message);
+begin
+  if TMessage(Message).Msg = WM_OpenCurrentFolder then
+  begin
+    OpenCurrentFolder;
+  end
+  else
+    inherited DefaultHandler(Message);
 end;
 
 end.
