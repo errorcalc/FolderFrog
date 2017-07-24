@@ -376,13 +376,17 @@ object MainForm: TMainForm
     object N5: TMenuItem
       Caption = '-'
     end
-    object MenuItemConfig: TMenuItem
-      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1103'...'
-      OnClick = MenuItemConfigClick
-    end
     object MenuItemForceCreate: TMenuItem
       Caption = #1057#1086#1079#1076#1072#1090#1100' '#1087#1088#1080#1085#1091#1076#1080#1090#1077#1083#1100#1085#1086
       OnClick = MenuItemForceCreateClick
+    end
+    object MenuItemCheckForUpdate: TMenuItem
+      Caption = #1055#1088#1086#1074#1077#1088#1080#1090#1100' '#1086#1073#1085#1086#1074#1083#1077#1085#1080#1103
+      OnClick = MenuItemCheckForUpdateClick
+    end
+    object MenuItemConfig: TMenuItem
+      Caption = #1050#1086#1085#1092#1080#1075#1091#1088#1072#1094#1080#1103'...'
+      OnClick = MenuItemConfigClick
     end
     object N3: TMenuItem
       Caption = '-'

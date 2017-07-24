@@ -58,6 +58,7 @@ type
     Bevel1: TBevel;
     Label4: TLabel;
     CheckBoxFullData: TCheckBox;
+    MenuItemCheckForUpdate: TMenuItem;
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemConfigClick(Sender: TObject);
     procedure ButtonOkClick(Sender: TObject);
@@ -69,6 +70,7 @@ type
     procedure FormHide(Sender: TObject);
     procedure MenuItemForceCreateClick(Sender: TObject);
     procedure MenuItemOpenCurrentFolderClick(Sender: TObject);
+    procedure MenuItemCheckForUpdateClick(Sender: TObject);
   private
     RealClose: Boolean;
     Settings: TSettings;
@@ -80,6 +82,7 @@ type
     procedure ShowTrayMessage(Msg: string);
     function CurrentPath(FullData: Boolean): string;
     procedure OpenCurrentFolder;
+    procedure CheckForUpdate;
   public
     procedure DefaultHandler(var Message); override;
   end;
@@ -120,6 +123,29 @@ end;
 procedure TMainForm.ButtonOkClick(Sender: TObject);
 begin
   Self.Close;
+end;
+
+procedure TMainForm.CheckForUpdate;
+const
+  Urls: TStringArray = ['https://raw.githubusercontent.com/errorcalc/FolderFrog/master/Update.ini', 'https://errorsoft.org/software/update.ini'];
+  Name = 'errorsoft.FolderFrog';
+begin
+  TurboUpdate.Check.CheckUpdate(
+    Urls,
+    Name,
+    procedure (UpdateAviable: Boolean; Version: TFileVersion)
+    var
+      Info: TUpdateInfo;
+    begin
+      if UpdateAviable then
+      begin
+        Info := Default(TUpdateInfo);
+        Info.Urls := Urls;
+        Info.Name := Name;
+        Info.Description := AppName + ' Update';
+        TurboUpdate.Update.Update(Info);
+      end;
+    end);
 end;
 
 function TMainForm.CurrentPath(FullData: Boolean): string;
@@ -165,26 +191,8 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   I: Integer;
-const
-  Urls: TStringArray = ['https://raw.githubusercontent.com/errorcalc/FolderFrog/master/Update.ini', 'https://errorsoft.org/software/update.ini'];
-  Name = 'errorsoft.FolderFrog';
 begin
-  TurboUpdate.Check.CheckUpdate(
-    Urls,
-    Name,
-    procedure (UpdateAviable: Boolean; Version: TFileVersion)
-    var
-      Info: TUpdateInfo;
-    begin
-      if UpdateAviable then
-      begin
-        Info := Default(TUpdateInfo);
-        Info.Urls := Urls;
-        Info.Name := Name;
-        Info.Description := AppName + ' Update';
-        TurboUpdate.Update.Update(Info);
-      end;
-    end);
+  CheckForUpdate;
 
   for I := 0 to ParamCount do
     if ParamStr(I).ToLower = '/hide' then
@@ -264,6 +272,11 @@ begin
   finally
     R.Free;
   end;
+end;
+
+procedure TMainForm.MenuItemCheckForUpdateClick(Sender: TObject);
+begin
+  CheckForUpdate;
 end;
 
 procedure TMainForm.MenuItemConfigClick(Sender: TObject);
