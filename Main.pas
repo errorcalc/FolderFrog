@@ -72,7 +72,6 @@ type
   private
     RealClose: Boolean;
     Settings: TSettings;
-    IsHiden: Boolean;
     IsBadPath: Boolean;
     procedure Generate;
     procedure LoadSettings;
@@ -188,17 +187,13 @@ begin
 
   for I := 0 to ParamCount do
     if ParamStr(I).ToLower = '/hide' then
-      IsHiden := True;
-
-  if IsHiden then
-  begin
-    Application.ShowMainForm := False;
-    IsHiden := False;
-  end;
+      Application.ShowMainForm := False;
 
   TimerTest.Enabled := True;
   Settings.AutoRun := True;
   Settings.FullData := True;
+
+  LoadSettings;
 end;
 
 procedure TMainForm.FormHide(Sender: TObject);
@@ -216,7 +211,6 @@ begin
   MenuItemOpenCurrentFolder.Enabled := False;
   MenuItemConfig.Enabled := False;
 
-  LoadSettings;
   EditPath.Text := Settings.Path;
   CheckBoxAutoRun.Checked := Settings.AutoRun;
   CheckBoxFullData.Checked := Settings.FullData;
@@ -277,8 +271,6 @@ begin
 end;
 
 procedure TMainForm.MenuItemOpenCurrentFolderClick(Sender: TObject);
-var
-  Dir: string;
 begin
   IsBadPath := False;
   Generate;

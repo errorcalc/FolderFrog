@@ -1,0 +1,2 @@
+FolderFrog /hide
+exit
