@@ -71,6 +71,7 @@ type
     procedure MenuItemForceCreateClick(Sender: TObject);
     procedure MenuItemOpenCurrentFolderClick(Sender: TObject);
     procedure MenuItemCheckForUpdateClick(Sender: TObject);
+    procedure TrayIconDblClick(Sender: TObject);
   private
     RealClose: Boolean;
     Settings: TSettings;
@@ -353,6 +354,11 @@ end;
 procedure TMainForm.TimerTestTimer(Sender: TObject);
 begin
   Generate;
+end;
+
+procedure TMainForm.TrayIconDblClick(Sender: TObject);
+begin
+  OpenCurrentFolder;
 end;
 
 procedure TMainForm.DefaultHandler(var Message);

@@ -363,6 +363,7 @@ object MainForm: TMainForm
       00000000000000000000003FFF00003FFF00FFFFFF00FFFFFF00FFFFFF00}
     PopupMenu = PopupMenu
     Visible = True
+    OnDblClick = TrayIconDblClick
     Left = 256
     Top = 226
   end
