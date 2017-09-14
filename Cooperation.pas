@@ -3,7 +3,7 @@ unit Cooperation;
 interface
 
 var
-  WM_OpenCurrentFolder: Integer;
+  WM_OpenCurrentFolder: Cardinal;
 
 implementation
 

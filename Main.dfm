@@ -374,6 +374,10 @@ object MainForm: TMainForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1090#1077#1082#1091#1097#1091#1102' '#1087#1072#1087#1082#1091
       OnClick = MenuItemOpenCurrentFolderClick
     end
+    object MenuItemOpenFolderForData: TMenuItem
+      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1072#1087#1082#1091' '#1076#1083#1103' '#1076#1072#1090#1099'...'
+      OnClick = MenuItemOpenFolderForDataClick
+    end
     object N5: TMenuItem
       Caption = '-'
     end

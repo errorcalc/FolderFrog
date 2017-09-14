@@ -1,0 +1,71 @@
+object SelectDateForm: TSelectDateForm
+  Left = 0
+  Top = 0
+  AutoSize = True
+  BorderStyle = bsNone
+  Caption = 'SelectDateForm'
+  ClientHeight = 392
+  ClientWidth = 326
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  FormStyle = fsStayOnTop
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnKeyUp = FormKeyUp
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Shape1: TShape
+    Left = 0
+    Top = 0
+    Width = 326
+    Height = 392
+    Align = alClient
+    Brush.Style = bsClear
+    Pen.Color = clWindowFrame
+    Pen.Width = 2
+    ExplicitLeft = 128
+    ExplicitTop = 168
+    ExplicitWidth = 65
+    ExplicitHeight = 65
+  end
+  object CalendarView: TCalendarView
+    AlignWithMargins = True
+    Left = 8
+    Top = 8
+    Width = 310
+    Height = 376
+    Margins.Left = 8
+    Margins.Top = 8
+    Margins.Right = 8
+    Margins.Bottom = 8
+    Align = alClient
+    Date = 42990.000000000000000000
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Segoe UI'
+    Font.Style = []
+    HeaderInfo.DaysOfWeekFont.Charset = DEFAULT_CHARSET
+    HeaderInfo.DaysOfWeekFont.Color = clWindowText
+    HeaderInfo.DaysOfWeekFont.Height = -13
+    HeaderInfo.DaysOfWeekFont.Name = 'Segoe UI'
+    HeaderInfo.DaysOfWeekFont.Style = []
+    HeaderInfo.Font.Charset = DEFAULT_CHARSET
+    HeaderInfo.Font.Color = clWindowText
+    HeaderInfo.Font.Height = -20
+    HeaderInfo.Font.Name = 'Segoe UI'
+    HeaderInfo.Font.Style = []
+    OnChange = CalendarViewChange
+    ParentFont = False
+    TabOrder = 0
+    ExplicitLeft = 13
+    ExplicitTop = 3
+  end
+end

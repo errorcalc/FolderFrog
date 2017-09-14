@@ -18,7 +18,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
-  System.Win.TaskbarCore, Vcl.Taskbar, Vcl.Menus, System.Win.Registry, FileCtrl, IoUtils, ShellAPI,
+  System.Win.TaskbarCore, Vcl.Taskbar, Vcl.Menus, System.Win.Registry, Vcl.FileCtrl, IoUtils, ShellAPI,
   Vcl.Imaging.pngimage, ES.BaseControls, ES.Images, Cooperation;
 
 const
@@ -59,6 +59,7 @@ type
     Label4: TLabel;
     CheckBoxFullData: TCheckBox;
     MenuItemCheckForUpdate: TMenuItem;
+    MenuItemOpenFolderForData: TMenuItem;
     procedure MenuItemExitClick(Sender: TObject);
     procedure MenuItemConfigClick(Sender: TObject);
     procedure ButtonOkClick(Sender: TObject);
@@ -72,6 +73,7 @@ type
     procedure MenuItemOpenCurrentFolderClick(Sender: TObject);
     procedure MenuItemCheckForUpdateClick(Sender: TObject);
     procedure TrayIconDblClick(Sender: TObject);
+    procedure MenuItemOpenFolderForDataClick(Sender: TObject);
   private
     RealClose: Boolean;
     Settings: TSettings;
@@ -81,8 +83,9 @@ type
     procedure SaveSettings;
     procedure SetAutoRun(Enable: Boolean);
     procedure ShowTrayMessage(Msg: string);
-    function CurrentPath(FullData: Boolean): string;
+    function CurrentPath(Date: TDate; FullData: Boolean): string;
     procedure OpenCurrentFolder;
+    procedure OpenFolder(Path: string);
     procedure CheckForUpdate;
   public
     procedure DefaultHandler(var Message); override;
@@ -96,7 +99,7 @@ implementation
 {$R *.dfm}
 
 uses
-  TurboUpdate.Check, TurboUpdate.Types, TurboUpdate.Update;
+  TurboUpdate.Check, TurboUpdate.Types, TurboUpdate.Update, SelectDate;
 
 const
   Months: array [1..12] of string = (
@@ -131,6 +134,7 @@ const
   Urls: TStringArray = ['https://raw.githubusercontent.com/errorcalc/FolderFrog/master/Update.ini', 'https://errorsoft.org/software/update.ini'];
   Name = 'errorsoft.FolderFrog';
 begin
+  {$ifndef DEBUG}
   TurboUpdate.Check.CheckUpdate(
     Urls,
     Name,
@@ -147,13 +151,14 @@ begin
         TurboUpdate.Update.Update(Info);
       end;
     end);
+  {$endif}
 end;
 
-function TMainForm.CurrentPath(FullData: Boolean): string;
+function TMainForm.CurrentPath(Date: TDate; FullData: Boolean): string;
 var
   Year, Month, Day: WORD;
 begin
-  DecodeDate(Now, Year, Month, Day);
+  DecodeDate(Date, Year, Month, Day);
   Result := IncludeTrailingPathDelimiter(Settings.Path) + Year.ToString + PathDelim +
     Months[Month] + PathDelim;// + Day.ToString;
 
@@ -236,7 +241,7 @@ begin
   try
     //if DirectoryExists(Settings.Path) then
     //begin
-      Folder := CurrentPath(Settings.FullData);
+      Folder := CurrentPath(Now, Settings.FullData);
 
       if not DirectoryExists(Folder) then
       begin
@@ -290,12 +295,36 @@ begin
  OpenCurrentFolder;
 end;
 
+procedure TMainForm.MenuItemOpenFolderForDataClick(Sender: TObject);
+var
+  SelectDateForm: TSelectDateForm;
+  Folder: string;
+begin
+  SelectDateForm := TSelectDateForm.Create(Application);
+  SelectDateForm.OnSelect := procedure(Date: TDate)
+  begin
+    Folder := CurrentPath(Date, Settings.FullData);
+
+    if DirectoryExists(Folder) then
+      OpenFolder(Folder)
+    else
+      ShowTrayMessage('Папки для данной даты не существует!');
+  end;
+  SelectDateForm.Show;
+end;
+
 procedure TMainForm.OpenCurrentFolder;
 begin
   IsBadPath := False;
   Generate;
   if not IsBadPath then
-    ShellExecute(Application.Handle, 'explore', PChar(CurrentPath(Settings.FullData)), nil, nil, SW_SHOWNORMAL);
+    OpenFolder(CurrentPath(Now, Settings.FullData));
+end;
+
+procedure TMainForm.OpenFolder(Path: string);
+begin
+  ShellExecute(Application.Handle, 'explore',
+    PChar(Path), nil, nil, SW_SHOWNORMAL);
 end;
 
 procedure TMainForm.MenuItemForceCreateClick(Sender: TObject);

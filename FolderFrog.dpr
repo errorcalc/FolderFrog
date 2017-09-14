@@ -7,7 +7,8 @@ uses
   Main in 'Main.pas' {MainForm},
   Vcl.Themes,
   Vcl.Styles,
-  Cooperation in 'Cooperation.pas';
+  Cooperation in 'Cooperation.pas',
+  SelectDate in 'SelectDate.pas' {SelectDateForm};
 
 {$R *.res}
 
