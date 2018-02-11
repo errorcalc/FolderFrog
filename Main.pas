@@ -83,7 +83,8 @@ type
     procedure SaveSettings;
     procedure SetAutoRun(Enable: Boolean);
     procedure ShowTrayMessage(Msg: string);
-    function CurrentPath(Date: TDate; FullData: Boolean): string;
+    function GetPathForDate(Date: TDate; FullData: Boolean): string;
+    function SearchPathForDate(Date: TDate; FullData: Boolean): string;
     procedure OpenCurrentFolder;
     procedure OpenFolder(Path: string);
     procedure CheckForUpdate;
@@ -154,18 +155,65 @@ begin
   {$endif}
 end;
 
-function TMainForm.CurrentPath(Date: TDate; FullData: Boolean): string;
+function TMainForm.GetPathForDate(Date: TDate; FullData: Boolean): string;
 var
   Year, Month, Day: WORD;
 begin
   DecodeDate(Date, Year, Month, Day);
   Result := IncludeTrailingPathDelimiter(Settings.Path) + Year.ToString + PathDelim +
-    Months[Month] + PathDelim;// + Day.ToString;
+    Months[Month] + PathDelim;
 
   if FullData then
     Result := Result + Day.ToString + '.' + Month.ToString + '.' + (Year mod 100).ToString
   else
     Result := Result +  Day.ToString;
+end;
+
+function TMainForm.SearchPathForDate(Date: TDate; FullData: Boolean): string;
+var
+  Year, Month, Day: WORD;
+  iYear, iMonth, iDay: Boolean;
+
+  function CreatePath(IsZeroDay, IsZeroMonth, IsZeroYear: Boolean): string;
+  begin
+    Result := IncludeTrailingPathDelimiter(Settings.Path) + Year.ToString + PathDelim +
+      Months[Month] + PathDelim;
+
+    // day
+    if IsZeroDay then
+      Result := Result + Format('%.2d', [Day])
+    else
+      Result := Result + Day.ToString;
+
+    if FullData then
+    begin
+      // Month
+      if IsZeroMonth then
+        Result := Result + '.' + Format('%.2d', [Month])
+      else
+        Result := Result + '.' + Month.ToString;
+
+      // (Year mod 100)
+      if IsZeroYear then
+        Result := Result + '.' + Format('%.2d', [(Year mod 100)])
+      else
+        Result := Result + '.' + (Year mod 100).ToString;
+    end;
+  end;
+
+begin
+  DecodeDate(Date, Year, Month, Day);
+
+  for iYear in [False..True] do
+    for iMonth in [False..True] do
+      for iDay in [False..True] do
+      begin
+        Result := CreatePath(iYear, iMonth, iDay);
+        if DirectoryExists(Result) then
+          Exit(Result);
+      end;
+
+  Result := '';
 end;
 
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -241,7 +289,7 @@ begin
   try
     //if DirectoryExists(Settings.Path) then
     //begin
-      Folder := CurrentPath(Now, Settings.FullData);
+      Folder := GetPathForDate(Now, Settings.FullData);
 
       if not DirectoryExists(Folder) then
       begin
@@ -292,7 +340,7 @@ end;
 
 procedure TMainForm.MenuItemOpenCurrentFolderClick(Sender: TObject);
 begin
- OpenCurrentFolder;
+  OpenCurrentFolder;
 end;
 
 procedure TMainForm.MenuItemOpenFolderForDataClick(Sender: TObject);
@@ -303,9 +351,9 @@ begin
   SelectDateForm := TSelectDateForm.Create(Application);
   SelectDateForm.OnSelect := procedure(Date: TDate)
   begin
-    Folder := CurrentPath(Date, Settings.FullData);
+    Folder := GetPathForDate(Date, Settings.FullData);
 
-    if DirectoryExists(Folder) then
+    if SearchPathForDate(Date, Settings.FullData) <> '' then
       OpenFolder(Folder)
     else
       ShowTrayMessage('Папки для данной даты не существует!');
@@ -318,7 +366,7 @@ begin
   IsBadPath := False;
   Generate;
   if not IsBadPath then
-    OpenFolder(CurrentPath(Now, Settings.FullData));
+    OpenFolder(GetPathForDate(Now, Settings.FullData));
 end;
 
 procedure TMainForm.OpenFolder(Path: string);

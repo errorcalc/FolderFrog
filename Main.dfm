@@ -87,7 +87,7 @@ object MainForm: TMainForm
       Margins.Bottom = 4
       Align = alBottom
       Alignment = taCenter
-      Caption = 'github.com/errorcalc/FolderFrog | errorsoft(c) 2017'
+      Caption = 'github.com/errorcalc/FolderFrog | errorsoft(c) 2018'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
