@@ -351,9 +351,9 @@ begin
   SelectDateForm := TSelectDateForm.Create(Application);
   SelectDateForm.OnSelect := procedure(Date: TDate)
   begin
-    Folder := GetPathForDate(Date, Settings.FullData);
+    Folder := SearchPathForDate(Date, Settings.FullData);
 
-    if SearchPathForDate(Date, Settings.FullData) <> '' then
+    if Folder <> '' then
       OpenFolder(Folder)
     else
       ShowTrayMessage('Папки для данной даты не существует!');
